@@ -1,0 +1,105 @@
+ body {
+   background: #0A2928;
+   font-family: 'Play', sans-serif;
+   color: #04F8E9;
+ }
+
+ ul {
+   list-style-type: none;
+ }
+
+ li {
+   display: inline;
+ }
+
+ a {
+   text-decoration: none;
+   color: #04F8E9;
+   outline: 0;
+ }
+
+ li a {
+   margin-right: 20px;
+   border: 2px solid #0A2928;
+ }
+
+ li a:hover {
+   border: 2px solid #04F8E9;
+ }
+
+ #name {
+   font-family: 'Orbitron', sans-serif;
+   border: 2px solid #04F8E9;
+   font-size: 60px;
+   padding-left: 2px;
+   padding-top: 5px;
+   margin-bottom: -8px;
+ }
+
+ #description {
+   float: right;
+   font-size: 20px;
+   margin-top: -20px;
+   margin-right: 20px;
+ }
+
+ @media screen and (max-width:480px) {
+   #description {
+     float: right;
+     font-size: 20px;
+     margin-top: -19px;
+     margin-right: 20px;
+   }
+
+   #name {
+     font-family: 'Orbitron', sans-serif;
+     border: 2px solid #04F8E9;
+     font-size: 60px;
+     padding-left: 2px;
+     padding-top: 5px;
+     padding-bottom: 7px;
+     margin-bottom: -8px;
+   }
+ }
+
+ @media screen and (max-width:400px) {
+   li a {
+     font-size: 15px;
+   }
+ }
+
+ .container {
+   margin-right: 2%; 
+   margin-left: 2%; 
+   margin-bottom: 20px; 
+   display: inline-block
+ }
+
+ .images {
+   position: relative;
+   height: 200px; 
+   width: 200px;
+   margin-top: 20px;
+   z-index: -1;
+ }
+
+ .overlay {
+   height: 200px;
+   width: 200px;
+   margin-top: -204px;
+   box-sizing: border-box;
+ }
+
+ .overlay:hover {
+   background-color: rgba(85, 255, 255, 0.3);
+   border: 1px solid #55FFFF;
+ }
+
+ .block {
+   color: #55FFFF; 
+   background: #0E7266; 
+   border: solid #00AAAA 2px; 
+   border-radius: 10px 10px 10px 10px; 
+   padding: 10px; 
+   display: inline-block;
+ }
