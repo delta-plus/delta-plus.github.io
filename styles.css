@@ -118,3 +118,14 @@
    color: #55FFFF;
    outline: 0;
  }
+
+ .pic {
+   height: 400px; 
+   width: 800px; 
+   display: block; 
+   margin: 0 auto; 
+   margin-top: 30px; 
+   margin-bottom: 30px; 
+   border: 2px solid #55FFFF; 
+   padding: 2px;
+ }
