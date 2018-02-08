@@ -52,6 +52,7 @@
     </div>
     <img src="assets/BD-nick-login.png" class="pic"/>
     <img src="assets/BD-web-shell.png" class="pic"/>
+    <h3>>>Exploitation</h3>
     <div class="block">
       I know that echo can be redirected to write to files, so I wrote up a quick script to load and execute a Meterpreter stager on the server. I needed to base64 encode the stager first because the web shell doesn't allow semicolons either. The base64 code was too long to echo with a single command and I felt like flexing my bot skills a bit. The web shell fails to filter out the pipe character and any commands after it, so the uploaded stager can be executed with cat and python.
     </div>
