@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width"/>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron|Play" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../styles.css">
+  </head>
+  <body>
+    <title>Welcome</title>
+    <h1 id="name">Joe Grassl</h1>
+    <div id="description">Freelance codeslinger</div>
+    <ul>
+      <li><a href="/" class="plain">Home</a></li>
+      <li><a href="https://github.com/delta-plus/info/blob/master/resume.pdf" class="plain">Resume</a></li>
+      <li><a href="https://github.com/delta-plus" target="_blank" class="plain">GitHub</a></li>
+      <li><a href="https://delta-plus.github.io/contact.html" class="plain">Contact</a></li>
+    </ul>
+    <h2>>>Help</h2>
+    <div class="block">
+      This was an interesting box. Another Linux machine from <a href="hackthebox.eu" style="text-decoration: underline">HackTheBox</a>. It was fairly easy, but required a bit of tinkering and research. I learned a couple new things, which is my goal in any CTF challenge.
+    </div>
+    <img src="../assets/help/help1.png" class="pic-thin"/>
+    <div class="block">
+      Starting out, Nmap reveals just three ports. You can usually rule out SSH as the first service to attack in CTF boxes like this. It would either be too easy or require a ridiculous amount of bruteforcing. Therefore, HTTP is our most likely target.
+    </div>
+    <img src="../assets/help/help2.png" class="pic-thin"/>
+    <div class="block">
+      Browsing to the web server directly yields the default Apache page. After scanning for directories with Dirb, I find a nice login page for what appears to be a help desk website. Maybe there are credentials hidden somewhere.
+    </div>
+    <img src="../assets/help/help3.png" class="pic"/>
+    <div class="block">
+      I decide to check out port 3000. Nmap decides that it's PPP, but it's good to check weird ports like this manually in a web browser (or maybe netcat, if browsing is unsuccessful) to see if there's some other service on it. Luckily, there is.
+    </div>
+    <img src="../assets/help/help4.png" class="pic-thin"/>
+    <div class="block">
+      It took me awhile to figure out that this is a GraphQL API. I don't have much experience with this framework, so I searched up a tutorial on the query structure. After a bit of fiddling around, a username and password pop right up.
+    </div>
+    <img src="../assets/help/help5.png" class="pic-thin"/>
+    <div class="block">
+      The password looks like an MD5 hash, so it gets thrown into a text file for hashcat. I run "hashcat -a 0 -m 0 hash.txt tools/wordlists/rockyou.txt --force" and get results in seconds, even with no GPUs.
+    </div>
+    <img src="../assets/help/help6.png" class="pic"/>
+    <div class="block">
+      These creds work on the helpdesk site, but I'm not sure where to go from here. I searched DuckDuckGo for "helpdeskz vulnerabilities" and the first result is an unauthenticated file upload exploit on ExploitDB. So much for the login. Well, PHP shells are always fun and this seems like the logical next step. I download the <a href="https://www.exploit-db.com/exploits/40300" style="text-decoration: underline">script</a> and decide to give it a whirl. 
+    </div>
+    <img src="../assets/help/upload1.png" class="pic"/>
+    <div class="block">
+      Before running the exploit, the PHP shell must be uploaded as an attachment to a support ticket. I just fill in the form with nonsense, add my shell file, and hit submit.
+    </div>
+    <img src="../assets/help/upload2.png" class="pic-thin"/>
+    <div class="block">
+      The web app displays a warning claiming that the file is not allowed. However, the site does actually upload the malicious file like any other and the only real protection is the MD5 hashed filename + timestamp, which this exploit tries to guess.
+    </div>
+    <img src="../assets/help/help7.png" class="pic-very-thin"/>
+    <div class="block">
+      Hmm. I don't have a shell. There could be some option to fiddle around with in the script to adjust it to our situation. Let's take a look.
+    </div>
+    <img src="../assets/help/help8.png" class="pic-thin"/>
+    <div class="block">
+      The documentation at the top of the script links to a GitHub repo containing the HelpDeskZ source code. This is great. With the exploit source and the application source in hand, all discrepancies can easily be found.
+    </div>
+    <img src="../assets/help/source.jpeg" class="pic"/>
+    <div class="block">
+      In submit_ticket_controller.php, the part of the application targeted by this exploit, a line stands out as the upload directory variable. Apparently, the my shell will be uploaded to some path ending in "tickets". The exploit script doesn't account for this at all. A small patch is needed.
+    </div>
+    <img src="../assets/help/help9.png" class="pic"/>
+    <div class="block">
+      First, we have to find the rest of the path, which is defined in the UPLOAD_DIR variable. I fire up a search for the original defintion of UPLOAD_DIR with the fantastically fast <a href="https://github.com/BurntSushi/ripgrep" style="text-decoration: underline">ripgrep</a> and a side of standard GNU grep.
+    </div>
+    <img src="../assets/help/help10.png" class="pic-very-thin"/>
+    <div class="block">
+      Aha! So the actual upload path is [HelpDeskZ root] + /uploads + /tickets. Here's the before and after.
+    </div>
+    <div style="display: flex; flex: 1; flex-direction: row; justify-content: center; margin-top: 30px; margin-bottom: 30px">
+      <img src="../assets/help/help11.png" class="pic" style="height: 400px; width: 400px; margin: 2px"/>
+      <img src="../assets/help/help12.png" class="pic" style="height: 400px; width: 500px; margin: 2px"/>
+    </div>
+    <div class="block">
+      Re-uploading a shell and trying the script again shows some very promising results!
+    </div>
+    <img src="../assets/help/help13.png" class="pic-very-thin"/>
+    <div class="block">
+      That's the shell I'm looking for! Let's get that flag.
+    </div>
+    <img src="../assets/help/help14.png" class="pic"/>
+    <div class="block">
+      Boom. All that's left is to check for privilege escalation vulnerabilities and get root.
+    </div>
+    <img src="../assets/help/help15.png" class="pic-thin"/>
+    <div class="block">
+      This machine is running a vulnerable version of the Ubuntu operating system. We can use the hacker's equivalent of a tactical nuke: kernel exploits! I'll need a local, non-PHP shell first, so I pivot over to netcat.
+    </div>
+    <img src="../assets/help/help16.png" class="pic-very-thin"/>
+    <img src="../assets/help/help17.png" class="pic"/>
+    <div class="block">
+      Now, it's just a matter of grabbing the kernel exploit from my own machine, compiling it, running it, and getting the root flag. Almost too easy. There are more exploits like this coming out every day, so keeping your OS updated is always a good idea. That's it for this challenge.
+    </div>
+  </body>
+</html>

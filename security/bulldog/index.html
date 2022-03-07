@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width"/>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron|Play" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../styles.css">
+  </head>
+  <body>
+    <title>Welcome</title>
+    <h1 id="name">Joe Grassl</h1>
+    <div id="description">Freelance codeslinger</div>
+    <ul>
+      <li><a href="/" class="plain">Home</a></li>
+      <li><a href="https://github.com/delta-plus/info/blob/master/resume.pdf" class="plain">Resume</a></li>
+      <li><a href="https://github.com/delta-plus" target="_blank" class="plain">GitHub</a></li>
+      <li><a href="https://delta-plus.github.io/contact.html" class="plain">Contact</a></li>
+    </ul>
+    <h2>>>Bulldog</h2>
+    <div class="block">
+      I'm back with another <a href="http://www.vulnhub.com" style="text-decoration: underline">Vulnhub</a> write-up! This time, the VM is Bulldog and the goal is to get superuser privileges and read the message in /root. Let's get started.
+    </div>
+    <img src="../assets/bulldog/bulldog.jpg" class="pic"/>
+    <h3>>>Recon</h3>
+    <div class="block">
+      A couple of nmap scans reveal that this challenge should be mostly web-based. Time to head over to the website.
+    </div>
+    <img src="../assets/bulldog/BD-nmap.png" class="pic"/>
+    <div class="block">
+      The homepage isn't too interesting. Just a note that the business is down for maintenance after a breach and a notice telling customers that neck-bearded hipsters will be taking over security operations from now on.
+    </div>
+    <img src="../assets/bulldog/BD-homepage.png" class="pic"/>
+    <img src="../assets/bulldog/BD-notice.png" class="pic"/>
+    <div class="block">
+      Using <a href="http://dirb.sourceforge.net" style="text-decoration: underline">dirb</a>, I find a couple interesting directories and a robots.txt file. Initially, I tried directory brute-forcing with a large wordlist, but the server stopped responding after a couple hundred requests. After breaking up the file with the split command and running dirb separately on each piece, I was able to get through the whole list.
+    </div>
+    <img src="../assets/bulldog/BD-dirb.png" class="pic"/>
+    <div class="block">
+      Looks like GSHT beat me to the punch.
+    </div>
+    <img src="../assets/bulldog/BD-robots.png" class="pic"/>
+    <div class="block">
+      The admin directory just points to a generic Django administration portal. No way into there yet. The dev directory describes some proposed upgrades to the site and links to a custom web shell. I like the sound of that! The shell only works for authenticated users, but fortunately there's some password hashes in the comments.
+    </div>
+    <img src="../assets/bulldog/BD-dev.png" class="pic"/>
+    <img src="../assets/bulldog/BD-hash-comments.png" class="pic"/>
+    <div class="block">
+      The comments claim a hacker can't do anything with a hash. <a href="https://hashcat.net/hashcat" style="text-decoration: underline">Hashcat</a> would beg to differ. Armed with the infamous <a href="http://downloads.skullsecurity.org/passwords/rockyou.txt.bz2" style="text-decoration: underline">rockyou</a> password list, Hashcat easily breaks a couple of these SHA1 hashes, even on my wimpy Pentium processor.
+    </div>
+    <img src="../assets/bulldog/BD-hashcat.png" class="pic"/>
+    <div class="block">
+      Back at the admin panel, I am now logged in as Nick. The web shell is available, but it limits commands to just the basics.
+    </div>
+    <img src="../assets/bulldog/BD-nick-login.png" class="pic"/>
+    <img src="../assets/bulldog/BD-web-shell.png" class="pic"/>
+    <h3>>>Exploitation</h3>
+    <div class="block">
+      I know that echo can be redirected to write to files, so I wrote up a quick script to load and execute a Meterpreter stager on the server. I needed to base64 encode the stager first because the web shell doesn't allow semicolons either. The base64 code was too long to echo with a single command and I felt like flexing my bot skills a bit. The web shell fails to filter out the pipe character and any commands after it, so the uploaded stager can be executed with cat and python.
+    </div>
+    <img src="../assets/bulldog/BD-msfvenom.png" class="pic"/>
+    <img src="../assets/bulldog/BD-loader.png" class="pic"/>
+    <div class="block">
+      With a handler on standby, I catch a shell and put on my exploring hat.
+    </div>
+    <img src="../assets/bulldog/BD-meterpreter.png" class="pic"/>
+    <div class="block">
+      After searching for interesting files, flawed privileges, and pillaging the sqlite database, I find the aptly named ".hiddenadmindirectory".
+    </div>
+    <img src="../assets/bulldog/BD-hidden-dir.png" class="pic"/>
+    <img src="../assets/bulldog/BD-hidden-note.png" class="pic"/>
+    <div class="block">
+      A program that can give root privileges to the Django account I just broke into? Might as well give it a go. I download the app and give it executable permissions. It requires the user's password. Let's see if we can find what it's matching input against.
+    </div>
+    <img src="../assets/bulldog/BD-strings.png" class="pic"/>
+    <div class="block">
+      Aha! Right in the middle of the strings output there's a bunch of weird strings. They look almost like...a password! I'll upload the binary with its new permissions and try it out in a bash shell.
+    </div>
+    <img src="../assets/bulldog/BD-root.png" class="pic"/>
+    <div class="block">
+      Hey! I'm root! Now, just gotta read that message.
+    </div>
+    <img src="../assets/bulldog/BD-congratz.png" class="pic"/>
+    <div class="block">
+      Nice! That was a cool VM. Apparently, there's two ways to get root, but one is good enough for me.
+    </div>
+  </body>
+</html>

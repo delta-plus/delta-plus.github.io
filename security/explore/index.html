@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width"/>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron|Play" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../styles.css">
+  </head>
+  <body>
+    <title>Welcome</title>
+    <h1 id="name">Joe Grassl</h1>
+    <div id="description">Freelance codeslinger</div>
+    <ul>
+      <li><a href="/" class="plain">Home</a></li>
+      <li><a href="https://github.com/delta-plus/info/blob/master/resume.pdf" class="plain">Resume</a></li>
+      <li><a href="https://github.com/delta-plus" target="_blank" class="plain">GitHub</a></li>
+      <li><a href="https://delta-plus.github.io/contact.html" class="plain">Contact</a></li>
+    </ul>
+    <h2>>>Explore</h2>
+    <div class="block">
+      This HackTheBox challenge is very interesting because it's an Android device. It's unlikely that you'd find an Android device just hanging out on the public Internet like this, so I'll just pretend that we're on the same WiFi network.
+    </div>
+    <img src="../assets/explore/explore.png" class="pic"/>
+    <div class="block">
+      Running an nmap version scan on port 42135 reveals that it's running an http service associated with ES File Explorer. That's strange. Why would a simple file explorer be running an http service? A quick web search shows that ES File Explorer used this as a backdoor for awhile. This was a very popular app and I actually had it on my Android around the same time the backdoor was discovered, so this was a disturbing but fascinating find.
+    </div>
+    <img src="../assets/explore/explore2.png" class="pic"/>
+    <div class="block">
+      Soon enough, I found an exploit for it and there happens to be a picture on the phone called "creds.jpg". Seems promising.
+    </div>
+    <img src="../assets/explore/explore3.png" class="pic"/>
+    <div class="block">
+      The backdoor can be used to download the file.
+    </div>
+    <img src="../assets/explore/explore4.png" class="pic"/>
+    <div class="block">
+      Lo and behold, creds.jpg does, in fact, contain creds.
+    </div>
+    <img src="../assets/explore/creds.jpg" class="pic"/>
+    <div class="block">
+      Luckily, the device is also running an SSH server so we can use the creds immediately to get the user flag.
+    </div>
+    <img src="../assets/explore/explore5.png" class="pic"/>
+    <div class="block">
+      I've done enough Android debugging to know that ADB (Android Debug Bridge) runs on port 5555 and can be accessed over SSH via port forwarding.
+    </div>
+    <img src="../assets/explore/explore6.png" class="pic"/>
+    <div class="block">
+      I also knew that, depending on the device, ADB might allow superuser access using the "su" command. It works! And that's root.
+    </div>
+    <img src="../assets/explore/explore7.png" class="pic"/>
+  </body>
+</html>

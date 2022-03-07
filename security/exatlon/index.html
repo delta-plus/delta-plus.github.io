@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width"/>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron|Play" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../styles.css">
+  </head>
+  <body>
+    <title>Welcome</title>
+    <h1 id="name">Joe Grassl</h1>
+    <div id="description">Freelance codeslinger</div>
+    <ul>
+      <li><a href="/" class="plain">Home</a></li>
+      <li><a href="https://github.com/delta-plus/info/blob/master/resume.pdf" class="plain">Resume</a></li>
+      <li><a href="https://github.com/delta-plus" target="_blank" class="plain">GitHub</a></li>
+      <li><a href="https://delta-plus.github.io/contact.html" class="plain">Contact</a></li>
+    </ul>
+    <h2>>>Exatlon</h2>
+    <div class="block">
+      A reverse engineering challenge from HackTheBox. The goal in this one is to decode a password in a manner similar to the keygen programs built for software piracy.
+    </div>
+    <img src="../assets/exatlon/exatlon.png" class="pic"/>
+    <div class="block">
+      Running strings on the binary reveals that it's packed with UPX. 
+    </div>
+    <img src="../assets/exatlon/exatlon2.png" class="pic"/>
+    <div class="block">
+      A quick web search turns up the tool and the binary can be unpacked with a single command.
+    </div>
+    <img src="../assets/exatlon/exatlon3.png" class="pic"/>
+    <div class="block">
+      Disassembling the program in radare2 quickly shows how it operates. It gets a password string from the user, runs it through the "exatlon" function, and then compares it to a big string of numbers separated by spaces. Entering the number string as the password doesn't return the flag, so it must be somewhere in the string itself.
+    </div>
+    <img src="../assets/exatlon/exatlon4.png" class="pic"/>
+    <div class="block">
+      By running the program with radare2 in debug mode, entering "aaaa" as the password, and viewing the registers at a breakpoint, it is clear that the user input is being encoded by the "exatlon" function in a way that matches the numerical string it's being compared to.
+    </div>
+    <img src="../assets/exatlon/exatlon5.png" class="pic"/>
+    <div class="block">
+      On a hunch, I test out dividing the encoded value of "a" by its decimal ASCII value of 97. This returns a value of exactly 16. So, every number in the comparison string is an ASCII character whose decimal value has been multiplied by 16.
+    </div>
+    <img src="../assets/exatlon/exatlon6.png" class="pic"/>
+    <div class="block">
+      I wrote a quick Python script to decode the mystery string...
+    </div>
+    <img src="../assets/exatlon/exatlon7.png" class="pic"/>
+    <div class="block">
+      ...and it works like a charm!
+    </div>
+    <img src="../assets/exatlon/exatlon8.png" class="pic"/>
+  </body>
+</html>

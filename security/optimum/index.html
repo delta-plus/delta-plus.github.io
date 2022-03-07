@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width"/>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron|Play" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../styles.css">
+  </head>
+  <body>
+    <title>Welcome</title>
+    <h1 id="name">Joe Grassl</h1>
+    <div id="description">Freelance codeslinger</div>
+    <ul>
+      <li><a href="/" class="plain">Home</a></li>
+      <li><a href="https://github.com/delta-plus/info/blob/master/resume.pdf" class="plain">Resume</a></li>
+      <li><a href="https://github.com/delta-plus" target="_blank" class="plain">GitHub</a></li>
+      <li><a href="https://delta-plus.github.io/contact.html" class="plain">Contact</a></li>
+    </ul>
+    <h2>>>Exatlon</h2>
+    <div class="block">
+      Another Windows machine from HackTheBox. The only available service is HTTP.
+    </div>
+    <img src="../assets/optimum/optimum.png" class="pic"/>
+    <div class="block">
+      The server is running Rejetto HTTP File Server. Searching for it on the web reveals that this version has an RCE vulnerability.
+    </div>
+    <img src="../assets/optimum/optimum2.png" class="pic"/>
+    <div class="block">
+      I used searchsploit to find a script to exploit it. I modified the script to get me a Sliver shell.
+    </div>
+    <img src="../assets/optimum/optimum3.png" class="pic"/>
+    <div class="block">
+      After receiving the shell, I'm able to get the user flag.
+    </div>
+    <img src="../assets/optimum/optimum5.png" class="pic"/>
+    <div class="block">
+      Running the SharpUp privilege escalation enumeration binary returns the user's password from an autologon value stored in the registry but this won't help me get root.
+    </div>
+    <img src="../assets/optimum/optimum6.png" class="pic"/>
+    <div class="block">
+      After trying many different techniques found <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md" style="text-decoration: underline">here</a>, I was eventually able to get root using the MS16-032 kernel exploit.
+    </div>
+    <img src="../assets/optimum/optimum7.png" class="pic"/>
+    <div class="block">
+      And there's the root flag.
+    </div>
+    <img src="../assets/optimum/optimum8.png" class="pic"/>
+  </body>
+</html>

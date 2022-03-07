@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width"/>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron|Play" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../styles.css">
+  </head>
+  <body>
+    <title>Welcome</title>
+    <h1 id="name">Joe Grassl</h1>
+    <div id="description">Freelance codeslinger</div>
+    <ul>
+      <li><a href="/" class="plain">Home</a></li>
+      <li><a href="https://github.com/delta-plus/info/blob/master/resume.pdf" class="plain">Resume</a></li>
+      <li><a href="https://github.com/delta-plus" target="_blank" class="plain">GitHub</a></li>
+      <li><a href="https://delta-plus.github.io/contact.html" class="plain">Contact</a></li>
+    </ul>
+    <h2>>>Bastion</h2>
+    <div class="block">
+      A Windows maching from HackTheBox. SMB, RPC, and SSH are what we have to work with.
+    </div>
+    <img src="../assets/bastion/bastion.png" class="pic"/>
+    <div class="block">
+      The Backups share looks interesting.
+    </div>
+    <img src="../assets/bastion/bastion2.png" class="pic"/>
+    <div class="block">
+      Here's a note.
+    </div>
+    <img src="../assets/bastion/bastion3.png" class="pic"/>
+    <div class="block">
+      Here's a couple of VHD backup files.
+    </div>
+    <img src="../assets/bastion/bastion4.png" class="pic"/>
+    <div class="block">
+      As the note suggested, the files are a bit too large to download directly over SMB and the connection kept timing out on me. Curl, however, works perfectly.
+    </div>
+    <img src="../assets/bastion/bastion6.png" class="pic"/>
+    <div class="block">
+      The smaller VHD doesn't have anything interesting on it.
+    </div>
+    <img src="../assets/bastion/bastion7.png" class="pic"/>
+    <div class="block">
+      The other one has a full Windows filesystem.
+    </div>
+    <img src="../assets/bastion/bastion8.png" class="pic"/>
+    <div class="block">
+      There's a few references to a user called L4mpje.
+    </div>
+    <img src="../assets/bastion/bastion9.png" class="pic"/>
+    <div class="block">
+      There's also a password in this file but it's useless as far as the challenge is concerned.
+    </div>
+    <img src="../assets/bastion/bastion11.png" class="pic"/>
+    <div class="block">
+      After messing around for a bit, I get the idea to just dump the hashes right out of the SAM.
+    </div>
+    <img src="../assets/bastion/bastion13.png" class="pic"/>
+    <div class="block">
+      With the wonderful secretsdump script from Impacket, it's easy enough.
+    </div>
+    <img src="../assets/bastion/bastion14.png" class="pic"/>
+    <div class="block">
+      Hit it with hashcat...
+    </div>
+    <img src="../assets/bastion/bastion15.png" class="pic"/>
+    <div class="block">
+      ...and cracked!
+    </div>
+    <img src="../assets/bastion/bastion16.png" class="pic"/>
+    <div class="block">
+      Connecting over SSH allows me to grab the user flag.
+    </div>
+    <img src="../assets/bastion/bastion17.png" class="pic"/>
+    <div class="block">
+      Just for fun, I upgrade my SSH connection to a Sliver implant.
+    </div>
+    <img src="../assets/bastion/bastion20.png" class="pic"/>
+    <div class="block">
+      Eventually, I find the a directory called "mRemoteNG" and after looking it up, it appears that it's a remote access tool and that the passwords in its config file can easily be cracked.
+    </div>
+    <img src="../assets/bastion/bastion22.png" class="pic"/>
+    <div class="block">
+      My web search turned up this decryption <a href="https://github.com/haseebT/mRemoteNG-Decrypt" style="text-decoration: underline">script</a>, which I used to recover the password.
+    </div>
+    <img src="../assets/bastion/bastion23.png" class="pic"/>
+    <div class="block">
+      And with that, the root flag is mine!
+    </div>
+    <img src="../assets/bastion/bastion24.png" class="pic"/>
+  </body>
+</html>

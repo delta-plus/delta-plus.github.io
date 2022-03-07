@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width"/>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron|Play" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../styles.css">
+  </head>
+  <body>
+    <title>Welcome</title>
+    <h1 id="name">Joe Grassl</h1>
+    <div id="description">Freelance codeslinger</div>
+    <ul>
+      <li><a href="/" class="plain">Home</a></li>
+      <li><a href="https://github.com/delta-plus/info/blob/master/resume.pdf" class="plain">Resume</a></li>
+      <li><a href="https://github.com/delta-plus" target="_blank" class="plain">GitHub</a></li>
+      <li><a href="https://delta-plus.github.io/contact.html" class="plain">Contact</a></li>
+    </ul>
+    <h2>>>Blackfield</h2>
+    <div class="block">
+      A Windows machine from HackTheBox. Let's see how to get root.
+    </div>
+    <img src="../assets/blackfield/blackfield.png" class="pic"/>
+    <div class="block">
+      Nmap reveals a set of fairly standard Windows services. Let's start with SMB.
+    </div>
+    <img src="../assets/blackfield/blackfield2.png" class="pic"/>
+    <div class="block">
+      The profiles share has a list of what appear to be usernames.
+    </div>
+    <img src="../assets/blackfield/blackfield3.png" class="pic"/>
+    <div class="block">
+      After saving the names to a file, we can enumerate which accounts are actually on the server using an nmap script against the Kerberos service.
+    </div>
+    <img src="../assets/blackfield/blackfield4.png" class="pic"/>
+    <div class="block">
+      Since Kerberos is open, we can also check to see if any of these users are vulnerable to ASREP roasting using Impacket's GetNPUsers script. It turns out that the support account actually is!
+    </div>
+    <img src="../assets/blackfield/blackfield5.png" class="pic"/>
+    <div class="block">
+      Now, hashcat can be used to crack the hash received in the previous step.
+    </div>
+    <img src="../assets/blackfield/blackfield6.png" class="pic"/>
+    <div class="block">
+      Cracked!
+    </div>
+    <img src="../assets/blackfield/blackfield7.png" class="pic"/>
+    <div class="block">
+      To do a bit more recon, I used the creds with pyhound, a script to remotely gather information for use with Bloodhound, an Active Directory enumeration tool.
+    </div>
+    <img src="../assets/blackfield/blackfield8.png" class="pic"/>
+    <div class="block">
+      The svc_backup account can do PS remoting, so this is our primary target. After telling Bloodhound that I've owned the support account and looking at that account's first degree object control, it appears that support has a "ForceChangePassword" permission for the audit2020 account.
+    </div>
+    <img src="../assets/blackfield/blackfield9.png" class="pic"/>
+    <div class="block">
+      After looking up what that means, it turns out you can use rpcclient to change a user's password. I also tried to change svc_backup's password just to see if it would work but we only have permission for audit2020.
+    </div>
+    <img src="../assets/blackfield/blackfield10.png" class="pic"/>
+    <div class="block">
+      Apparently, audit2020 has access to the forensic share.
+    </div>
+    <img src="../assets/blackfield/blackfield11.png" class="pic"/>
+    <div class="block">
+      There's an LSASS memory dump in there. I used pypykatz (Python version of mimikatz) to dump a hash belonging to svc_backup.
+    </div>
+    <img src="../assets/blackfield/blackfield12.png" class="pic"/>
+    <div class="block">
+      Port 5985 is open, so from here, I used a tool called Evil-WinRM to get a shell using just the hash. No cracking required. This nets me the user flag.
+    </div>
+    <img src="../assets/blackfield/blackfield13.png" class="pic"/>
+    <div class="block">
+      Checking the groups for svc_backup shows that the user is, not surprisingly, a Backup Operator.
+    </div>
+    <img src="../assets/blackfield/blackfield15.png" class="pic-very-thin"/>
+    <div class="block">
+      After searching up what that means within a security context, I find that Backup Operators are actually very powerful. First, I upload a couple of <a href="https://github.com/giuliano108/SeBackupPrivilege" style="text-decoration: underline">dlls</a> in order to abuse the privilege.
+    </div>
+    <img src="../assets/blackfield/blackfield16.png" class="pic"/>
+    <div class="block">
+      After that, you can just rip out the beating heart of Active Directory: ntds.dit, a file containing the usernames and hashes of every single user on the domain, including admins.
+    </div>
+    <img src="../assets/blackfield/blackfield17.png" class="pic"/>
+    <div class="block">
+      Impacket's secretsdump script reads out the administrator hash.
+    </div>
+    <img src="../assets/blackfield/blackfield18.png" class="pic"/>
+    <div class="block">
+      Then, it's just a matter of reconnecting over Evil-WinRM with the new hash to get root.
+    </div>
+    <img src="../assets/blackfield/blackfield19.png" class="pic"/>
+  </body>
+</html>

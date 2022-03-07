@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width"/>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron|Play" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../styles.css">
+  </head>
+  <body>
+    <title>Welcome</title>
+    <h1 id="name">Joe Grassl</h1>
+    <div id="description">Freelance codeslinger</div>
+    <ul>
+      <li><a href="/" class="plain">Home</a></li>
+      <li><a href="https://github.com/delta-plus/info/blob/master/resume.pdf" class="plain">Resume</a></li>
+      <li><a href="https://github.com/delta-plus" target="_blank" class="plain">GitHub</a></li>
+      <li><a href="https://delta-plus.github.io/contact.html" class="plain">Contact</a></li>
+    </ul>
+    <h2>>>Building a Voice-Activated Personal Assistant for $50</h2>
+    <div class="block">
+This is the 21st century and while not everyone has a flying car, there's no reason you can't have your very own AI companion! Products like Amazon Echo and Siri-enabled smartphones are neat, but they're a bit on the expensive side and don't offer the limitless customization mad scientists like us crave. Luckily, building a virtual assistant isn't as hard as it sounds.
+    </div>
+    <img src="assets/ai.png" style="height: 300px; width: 300px; display: block; margin: 0 auto; margin-top: 30px"/>
+    <h3>>>Hardware</h3>
+    <div class="block">
+      You can't have software without hardware. For this project, you'll need a <a href="https://www.raspberrypi.org/products/raspberry-pi-2-model-b" style="text-decoration: underline">Raspberry Pi 2 Model B</a>, a <a href="https://www.amazon.com/Kinobo-Microphone-Desktop-Recognition-Software/dp/B00IR8R7WQ" style="text-decoration: underline">USB microphone</a>, and <a href="https://www.amazon.com/MANHATTAN-2600-Speaker-System-161435/dp/B005LW42MY" style="text-decoration: underline">speakers</a>. This smart little chip will listen to you and carry out your orders! Here's how.
+    </div>
+    <img src="assets/rpi.png" style="height: 300px; width: 300px; display: block; margin: 0 auto; margin-top: 30px; margin-bottom: 30px"/>
+    <h3>>>Software</h3>
+    <div class="block">
+      After you set up the Pi, the real fun begins! In order for your Raspberry Pi to exact your will, it needs a few tools. First, you'll need to download <a href="https://github.com/ajbogh/blather" style="text-decoration: underline">Blather</a>, a speech recognizer that works using command pairs. You'll have a file called commands.conf which you can fill with lines like "open firefox:firefox" to, as you might guess, start Firefox. Simple right? For more complex tasks, you can use Python and packages like <a href="https://pypi.python.org/pypi/selenium" style="text-decoration: underline">Selenium</a> or <a href="https://pypi.python.org/pypi/mechanize" style="text-decoration: underline">Mechanize</a> to handle web stuff. For clicking and typing things, I highly recommend <a href="http://semicomplete.com/projects/xdotool" style="text-decoration: underline">Xdotool</a>. Of course, no digital butler would be complete without a cool synthetic voice! For this, you'll want <a href="http://www.cstr.ed.ac.uk/projects/festival" style="text-decoration: underline">Festival</a>, which can make use of some really nice <a href="https://www.youtube.com/watch?v=95IL9NucK5o" style="text-decoration: underline">voices</a>.
+    </div>
+    <img src="assets/robot.png" style="height: 300px; width: 200px; display: block; margin: 0 auto; margin-top: 30px; margin-bottom: 30px"/>
+    <h3>>>Teach Your Robot</h3>
+    <div class="block">
+      Now, if you want to make this thing really cool, you can have it learn new commands on the fly. That is, you can write a command that writes new commands. First, you need to convert speech to text. There are a bunch of ways you could do this, but one of the easiest is simply writing a Blather command to browse to https://dictation.io using Google Chrome (or Chromium) and allow the site to use the mic. You'll probably need another command to hit backspace a few times in case any mistakes are made and one more to stop the site from listening, clean up the text, copy it, and insert the new command into the configuration file. Trust me, once you get this working, you'll feel like Tony Stark.
+    </div>
+    <img src="assets/jarvis.jpg" style="height: 400px; width: 80%; display: block; margin: 0 auto; margin-top: 30px; margin-bottom: 30px"/>
+    <h3>>>Ending Thoughts</h3>
+    <div class="block" style="margin-bottom: 30px">
+There are certainly other upgrades you could add. If you have a spare monitor lying around, you could sync up a nice floating head GIF to play whenever your assistant speaks. Got any IP cameras? Hook 'em up to the Pi, add some <a href="https://azure.microsoft.com/en-us/services/cognitive-services/face" style="text-decoration: underline">face recognition software</a> and your assistant will be able to tell you who's at your door or snap pictures of potential intruders. The possibilities are endless!
+    </div>
+  </body>
+</html>

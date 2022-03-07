@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width"/>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron|Play" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../styles.css">
+  </head>
+  <body>
+    <title>Welcome</title>
+    <h1 id="name">Joe Grassl</h1>
+    <div id="description">Freelance codeslinger</div>
+    <ul>
+      <li><a href="/" class="plain">Home</a></li>
+      <li><a href="https://github.com/delta-plus/info/blob/master/resume.pdf" class="plain">Resume</a></li>
+      <li><a href="https://github.com/delta-plus" target="_blank" class="plain">GitHub</a></li>
+      <li><a href="https://delta-plus.github.io/contact.html" class="plain">Contact</a></li>
+    </ul>
+    <h2>>>Rickdiculously Easy</h2>
+    <div class="block">
+      Rickdiculously Easy is a virtual machine from <a href="http://www.vulnhub.com" style="text-decoration: underline">Vulnhub</a>. Like other VMs on the site, this one has many security flaws. The challenge is to find them, along with 130 points worth of flags, and eventually gain root access. Being a big fan of Rick & Morty, I'm excited to check it out.
+    </div>
+    <img src="../assets/rickdiculous/rick.gif" class="pic"/>
+    <h3>>>Recon</h3>
+    <div class="block">
+      Reconnaissance is always the first step of any good hack. I determine the target machine's location on the network using a ping sweep provided by Nmap and proceed to scan all 65,535 TCP ports. This is mandatory with boot-to-root VMs like this because the author will often put the more interesting services way up there.
+    </div>
+    <img src="../assets/rickdiculous/RE-nmap.png" class="pic"/>
+    <div class="block">
+      Alright! Nmap turned up some leads. Port 80 is open, so there should be a web server running. I'll check it out and save the other ports for later.
+    </div>
+    <img src="../assets/rickdiculous/mortys-site.png" class="pic"/>
+    <div class="block">
+      Here we go! Time to poke around. Let's see if we can find any interesting files and directories with <a href="http://dirb.sourceforge.net" style="text-decoration: underline">dirb</a>.
+    </div>
+    <img src="../assets/rickdiculous/RE-dirb.png" class="pic"/>
+    <div class="block">
+      The passwords directory is loaded with good stuff. There's a flag and a commented password. Should be useful later on.
+    </div>
+    <img src="../assets/rickdiculous/RE-passwords.png" class="pic"/>
+    <img src="../assets/rickdiculous/RE-flag-1.png" class="pic"/>
+<img src="../assets/rickdiculous/winter.png" class="pic"/>
+    <h3>>>Exploitation</h3>
+    <div class="block">
+      Now that some options have opened up, it's time to try and get a shell. The cgi-bin directory looks interesting. The robots.txt file has a couple clues about its contents.
+    </div>
+    <img src="../assets/rickdiculous/RE-robots.png" class="pic"/>
+    <div class="block">
+      The root shell isn't going to be of much help, unfortunately.
+    </div>
+    <img src="../assets/rickdiculous/RE-cgi-shell.png" class="pic"/>
+    <div class="block">
+      Hmmm. Looks like this page is executing tracert on the server and returning its output.
+    </div>
+    <img src="../assets/rickdiculous/mortys-tracer-1.png" class="pic"/>
+    <div class="block">
+      Let's try the old "semicolon-in-the-shell-command-input" trick by entering "; ls".
+    </div>
+    <img src="../assets/rickdiculous/mortys-tracer-2.png" class="pic"/>
+    <div class="block">
+      Yeah, that's some remote code execution right there. I was able to get some executable reverse shell scripts into /tmp by copying the CGI files there and overwriting their contents, but unfortunately no shells were returned home. At least I know which users are on here now.
+    </div>
+    <img src="../assets/rickdiculous/mortys-tracer-3.png" class="pic"/>
+    <div class="block">
+      The droids we're looking for appear to be Morty, Summer, and RickSanchez. I had to use less because trying to cat anything returns a literal cat drawn in ASCII art.
+    </div>
+    <img src="../assets/rickdiculous/RE-cat.png" class="pic"/>
+    <div class="block">
+      Well, we still have all those ports from earlier. I wonder what they're hiding...
+    </div>
+    <img src="../assets/rickdiculous/RE-21-22.png" class="pic"/>
+    <div class="block">
+      The FTP server is password protected and SSH is refusing connections. The Zeus web console is deactivated, but there is a flag.
+    </div>
+    <img src="../assets/rickdiculous/RE-zeus.png" class="pic"/>
+    <div class="block">
+      13337 and 60000 both have flags as well. The shell on 60000 won't let you do anything but read the flag, apparently. Port 22222 seems to be running SSH, which also requires a login. Perhaps now would be a good time to try that password.
+    </div>
+    <img src="../assets/rickdiculous/RE-ports.png" class="pic"/>
+    <div class="block">
+      Despite being found on Morty's website, "winter" turns out to be Summer's password. Haha, of course it is!
+    </div>
+    <img src="../assets/rickdiculous/RE-ssh.png" class="pic"/>
+    <div class="block">
+      The same credentials work for the FTP service, but I've already got the flag from Summer's home directory and SSH is more useful anyway. Let's see what Morty's been up to.
+    </div>
+    <img src="../assets/rickdiculous/mortys-home-dir.png" class="pic"/>
+    <div class="block">
+      Okay, there's an image and zipped text file. I couldn't download the pic with ftp or scp, so I just converted the whole thing to base64, put it into a file named base, and used "base64 -d base > Safe_Password.jpg" to get the original file. After retrieving the files, it's clear the zip archive is password protected. The image file could probably help.
+    </div>
+    <img src="../assets/rickdiculous/mortys-zip.png" class="pic"/>
+    <div class="block">
+      The picture doesn't look suspicious from the outside.
+    </div>
+    <img src="../assets/rickdiculous/mortys-password-pic.png" class="pic"/>
+    <div class="block">
+      I hit it with exiftool, thinking there might be something hidden in the metadata. No dice. Strings has me covered, though.
+    </div>
+    <img src="../assets/rickdiculous/mortys-pic-exif.png" class="pic"/>
+    <img src="../assets/rickdiculous/mortys-pic-strings.png" class="pic"/>
+    <div class="block">
+      Using the password "Meeseek", we can see what Morty's got in his journal. This looks promising!
+    </div>
+    <img src="../assets/rickdiculous/mortys-journal.png" class="pic"/>
+    <div class="block">
+      Back in the SSH terminal, I find that Rick does indeed have a safe. There's also a nice red herring as well!
+    </div>
+    <img src="../assets/rickdiculous/ricks-safe-1.png" class="pic"/>
+    <div class="block">
+      Summer doesn't have permission to execute it, so I'll just download it base64-style, like before. I'll also run it in a Docker container, just to be safe.
+    </div>
+    <img src="../assets/rickdiculous/ricks-safe-2.png" class="pic"/>
+    <div class="block">
+      Looks like password worked. Thanks again Morty! Now, can we get Rick's password too? First, I'll need a wordlist based on Rick's hints. <a href="https://sourceforge.net/projects/crunch-wordlist" style="text-decoration: underline">Crunch</a> is the perfect tool for the job. Luckily, I know that Rick used to play in The Flesh Curtains, so we can get down to business.
+    </div>
+    <img src="../assets/rickdiculous/RE-crunch.png" class="pic"/>
+    <div class="block">
+      The commands above generate files filled with passwords like these.
+    </div>
+    <img src="../assets/rickdiculous/RE-crunch-files.png" class="pic"/>
+    <div class="block">
+      Now we just need a brute-forcing script. There's probably a better, cleaner way to do this, but quick and dirty is the hacker way. Perfect elegance is too, but I just want that password. So, without further ado, I present Krom-Bopulous: The Lazy Man's Custom Brute-Forcer!
+    </div>
+    <div style="display: flex; flex: 1; flex-direction: row; justify-content: center; margin-top: 30px; margin-bottom: 30px">
+      <img src="../assets/rickdiculous/krom.png" class="pic" style="height: 400px; width: 400px; margin: 2px"/>
+      <img src="../assets/rickdiculous/bopulous.png" class="pic" style="height: 400px; width: 400px; margin: 2px"/>
+    </div>
+    <div class="block">
+      Named after Krombopulous Michael, the assassin of Rick & Morty fame, Krom and Bopulous will loop through each password in each file in the directory specified and write the correct password into the file "found". It really saves time if you split the wordlists up, like below.
+    </div>
+    <img src="../assets/rickdiculous/RE-split.png" class="pic"/>
+    <div class="block">
+      Here's the script in action! Isn't she beautiful?
+    </div>
+    <img src="../assets/rickdiculous/krom-output.png" class="pic"/>
+    <div class="block">
+      Now, we just open the output file aaand...there it is!
+    </div>
+    <img src="../assets/rickdiculous/ricks-password.png" class="pic"/>
+    <div class="block">
+      Logging in as Rick, I'm now able to elevate all the way to root with a simple "sudo su".
+    </div>
+    <img src="../assets/rickdiculous/RE-root.png" class="pic"/>
+    <div class="block">
+      Aha! The last flag! Wait a minute...I'm missing one. Not to worry. A recursive search will find it.
+    </div>
+    <img src="../assets/rickdiculous/RE-last-flag.png" class="pic"/>
+    <div class="block">
+      Alright! Looks like we're done here. That was fun.
+    </div>
+  </body>
+</html>
