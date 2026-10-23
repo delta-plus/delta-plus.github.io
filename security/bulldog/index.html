@@ -15,12 +15,12 @@
       <li><a href="https://github.com/delta-plus" target="_blank" class="plain">GitHub</a></li>
       <li><a href="https://delta-plus.github.io/contact" class="plain">Contact</a></li>
     </ul>
-    <h2>>>Bulldog</h2>
+    <h2>> >Bulldog</h2>
     <div class="block">
       I'm back with another <a href="http://www.vulnhub.com" style="text-decoration: underline">Vulnhub</a> write-up! This time, the VM is Bulldog and the goal is to get superuser privileges and read the message in /root. Let's get started.
     </div>
     <img src="../assets/bulldog/bulldog.jpg" class="pic"/>
-    <h3>>>Recon</h3>
+    <h3>> >Recon</h3>
     <div class="block">
       A couple of nmap scans reveal that this challenge should be mostly web-based. Time to head over to the website.
     </div>
@@ -52,7 +52,7 @@
     </div>
     <img src="../assets/bulldog/BD-nick-login.png" class="pic"/>
     <img src="../assets/bulldog/BD-web-shell.png" class="pic"/>
-    <h3>>>Exploitation</h3>
+    <h3>> >Exploitation</h3>
     <div class="block">
       I know that echo can be redirected to write to files, so I wrote up a quick script to load and execute a Meterpreter stager on the server. I needed to base64 encode the stager first because the web shell doesn't allow semicolons either. The base64 code was too long to echo with a single command and I felt like flexing my bot skills a bit. The web shell fails to filter out the pipe character and any commands after it, so the uploaded stager can be executed with cat and python.
     </div>
