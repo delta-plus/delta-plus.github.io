@@ -15,12 +15,12 @@
       <li><a href="https://github.com/delta-plus" target="_blank" class="plain">GitHub</a></li>
       <li><a href="https://delta-plus.github.io/contact" class="plain">Contact</a></li>
     </ul>
-    <h2>> >Rickdiculously Easy</h2>
+    <h2>>> Rickdiculously Easy</h2>
     <div class="block">
       Rickdiculously Easy is a virtual machine from <a href="http://www.vulnhub.com" style="text-decoration: underline">Vulnhub</a>. Like other VMs on the site, this one has many security flaws. The challenge is to find them, along with 130 points worth of flags, and eventually gain root access. Being a big fan of Rick & Morty, I'm excited to check it out.
     </div>
     <img src="../assets/rickdiculous/rick.gif" class="pic"/>
-    <h3>> >Recon</h3>
+    <h3>>> Recon</h3>
     <div class="block">
       Reconnaissance is always the first step of any good hack. I determine the target machine's location on the network using a ping sweep provided by Nmap and proceed to scan all 65,535 TCP ports. This is mandatory with boot-to-root VMs like this because the author will often put the more interesting services way up there.
     </div>
@@ -39,7 +39,7 @@
     <img src="../assets/rickdiculous/RE-passwords.png" class="pic"/>
     <img src="../assets/rickdiculous/RE-flag-1.png" class="pic"/>
 <img src="../assets/rickdiculous/winter.png" class="pic"/>
-    <h3>> >Exploitation</h3>
+    <h3>>> Exploitation</h3>
     <div class="block">
       Now that some options have opened up, it's time to try and get a shell. The cgi-bin directory looks interesting. The robots.txt file has a couple clues about its contents.
     </div>
